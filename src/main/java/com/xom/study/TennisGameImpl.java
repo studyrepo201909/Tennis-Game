@@ -1,68 +1,38 @@
 package com.xom.study;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.apache.commons.collections4.IterableUtils.find;
+
 public class TennisGameImpl implements TennisGame {
-  private int m_score1 = 0;
-  private int m_score2 = 0;
-  private String player1Name;
-  private String player2Name;
+
+  private Player player1;
+  private Player player2;
 
   public TennisGameImpl(String player1Name, String player2Name) {
-    this.player1Name = player1Name;
-    this.player2Name = player2Name;
+    this.player1 = new Player(player1Name);
+    this.player2 = new Player(player2Name);
   }
 
   public void wonPoint(String playerName) {
-    if (playerName == "player1") m_score1 += 1;
-    else m_score2 += 1;
+    playerFrom(playerName).wonPoint();
   }
 
   public String getScore() {
-    String score = "";
-    int tempScore = 0;
-    if (m_score1 == m_score2) {
-      switch (m_score1) {
-        case 0:
-          score = "Love-All";
-          break;
-        case 1:
-          score = "Fifteen-All";
-          break;
-        case 2:
-          score = "Thirty-All";
-          break;
-        default:
-          score = "Deuce";
-          break;
-      }
-    } else if (m_score1 >= 4 || m_score2 >= 4) {
-      int minusResult = m_score1 - m_score2;
-      if (minusResult == 1) score = "Advantage player1";
-      else if (minusResult == -1) score = "Advantage player2";
-      else if (minusResult >= 2) score = "Win for player1";
-      else score = "Win for player2";
-    } else {
-      for (int i = 1; i < 3; i++) {
-        if (i == 1) tempScore = m_score1;
-        else {
-          score += "-";
-          tempScore = m_score2;
-        }
-        switch (tempScore) {
-          case 0:
-            score += "Love";
-            break;
-          case 1:
-            score += "Fifteen";
-            break;
-          case 2:
-            score += "Thirty";
-            break;
-          case 3:
-            score += "Forty";
-            break;
-        }
-      }
-    }
-    return score;
+    return find(possibleScores(), new IsAppliable()).toString();
+  }
+
+  private List<Score> possibleScores() {
+    return asList(
+        new TieScore(player1, player2),
+        new WinScore(player1, player2),
+        new AdvantageScore(player1, player2),
+        new NormalScore(player1, player2),
+        new NullScore(player1, player2));
+  }
+
+  private Player playerFrom(String playerName) {
+    return player1.isCalled(playerName) ? player1 : player2;
   }
 }

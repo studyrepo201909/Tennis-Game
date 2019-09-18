@@ -10,7 +10,7 @@ public class TennisGameImpl implements TennisGame {
   private Player player1;
   private Player player2;
 
-  public TennisGameImpl(String player1Name, String player2Name) {
+  TennisGameImpl(String player1Name, String player2Name) {
     this.player1 = new Player(player1Name);
     this.player2 = new Player(player2Name);
   }

@@ -17,3 +17,15 @@ dependencies {
     testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.2.0'
     test.useJUnitPlatform()
 }
+
+test {
+    testLogging.showStandardStreams = false
+    useJUnitPlatform()
+
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    reports {
+        html.enabled = true
+    }
+}
